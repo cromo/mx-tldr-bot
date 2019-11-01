@@ -20,5 +20,11 @@
   "bugs": {
     "url": "https://github.com/cromo/mx-tldr-bot/issues"
   },
-  "homepage": "https://github.com/cromo/mx-tldr-bot#readme"
+  "homepage": "https://github.com/cromo/mx-tldr-bot#readme",
+  "dependencies": {
+    "@iarna/toml": "^2.2.3",
+    "matrix-bot-sdk": "^0.3.9",
+    "node-fetch": "^2.6.0",
+    "ts-node": "^8.4.1"
+  }
 }
