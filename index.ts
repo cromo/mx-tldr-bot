@@ -15,7 +15,7 @@ const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsS
 
 const hasContent = R.compose(R.not, R.isNil, R.prop("content"));
 const eventBody = R.path(["content", "body"]);
-const startsWithBangCommand = command => event => event.content.body.startsWith(`!${command}`);
+const startsWithBangCommand = command => R.pipe(eventBody, R.startsWith(`!${command}`));
 const shouldRespond = R.allPass([hasContent, startsWithBangCommand("tldr")]);
 const removeCommandPrefix = R.replace(/^!tldr\s*/, "");
 const commandContent = R.pipe(eventBody, removeCommandPrefix);
