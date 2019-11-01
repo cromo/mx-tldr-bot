@@ -20,7 +20,7 @@ const shouldRespond = R.allPass([hasContent, startsWithBangCommand("tldr")]);
 const removeCommandPrefix = R.replace(/^!tldr\s*/, "");
 const commandContent = R.pipe(eventBody, removeCommandPrefix);
 const smmry = url => fetch(`https://api.smmry.com?SM_API_KEY=${config.smmryApiKey}&SM_URL=${url}`);
-const toJson = res => res.json();
+const toJson = R.invoker(0, "json");
 const getSummary = R.pipe(smmry, R.then(toJson), R.then(R.prop("sm_api_content")));
 const sendNotice = R.curry((client, roomId, message) => client.sendNotice(roomId, message));
 
