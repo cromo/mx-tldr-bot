@@ -29,7 +29,7 @@ const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsS
 
 client.start().then(() => console.log("Client started"));
 
-client.on('room.message', async (roomId: string, event: any) => {
+client.on('room.message', (roomId: string, event: any) => {
   const notifyRoom = sendNotice(client, roomId);
   R.when(
     shouldRespond,
