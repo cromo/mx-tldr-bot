@@ -21,6 +21,7 @@ const getCommandContent = R.replace(/^!tldr\s*/, "");
 const smmry = url => fetch(`https://api.smmry.com?SM_API_KEY=${config.smmryApiKey}&SM_URL=${url}`);
 const toJson = res => res.json();
 const getSummary = R.pipe(smmry, R.then(toJson), R.then(R.prop("sm_api_content")));
+const sendNotice = R.curry((client, roomId, message) => client.sendNotice(roomId, message));
 
 client.start().then(() => console.log("Client started"));
 
@@ -31,8 +32,8 @@ client.on('room.message', async (roomId: string, event: any) => {
       eventBody,
       getCommandContent,
       getSummary,
-      R.then(summary => client.sendNotice(roomId, summary)),
-      R.otherwise(() => client.sendNotice(roomId, `Unable to get summary for ${R.pipe(eventBody, getCommandContent)(event)}`))
+      R.then(sendNotice(client, roomId)),
+      R.otherwise(R.thunkify(sendNotice)(client, roomId, `Unable to get summary for ${R.pipe(eventBody, getCommandContent)(event)}`))
     ),
     event);
 });
