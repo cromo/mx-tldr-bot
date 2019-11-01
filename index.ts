@@ -34,7 +34,11 @@ const environmentConfig = {
   smmryApiKey: envConfigFor("SMMRY_API_KEY")
 };
 
-const config = mergeAllNonNil([defaultConfig, readConfig("config.toml"), environmentConfig]);
+const config = mergeAllNonNil([
+  defaultConfig,
+  readConfig(R.defaultTo("config.toml", envConfigFor("CONFIG_FILE"))),
+  environmentConfig
+]);
 const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsStorageProvider("sync.json"));
 
 client.start().then(() => console.log("Client started"));
