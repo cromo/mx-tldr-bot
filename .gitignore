@@ -62,3 +62,6 @@ typings/
 
 # development config file
 config.toml
+
+# matrix sync state
+sync.json
