@@ -1,0 +1,24 @@
+{
+  "name": "mx-tldr-bot",
+  "version": "0.1.0",
+  "description": "Summarize websites",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cromo/mx-tldr-bot.git"
+  },
+  "keywords": [
+    "matrix",
+    "bot",
+    "timer"
+  ],
+  "author": "Cristián Romo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cromo/mx-tldr-bot/issues"
+  },
+  "homepage": "https://github.com/cromo/mx-tldr-bot#readme"
+}
