@@ -17,7 +17,8 @@ const hasContent = event => !!event.content;
 const eventBody = R.path(["content", "body"]);
 const startsWithBangCommand = command => event => event.content.body.startsWith(`!${command}`);
 const shouldRespond = R.allPass([hasContent, startsWithBangCommand("tldr")]);
-const getCommandContent = R.replace(/^!tldr\s*/, "");
+const removeCommandPrefix = R.replace(/^!tldr\s*/, "");
+const commandContent = R.pipe(eventBody, removeCommandPrefix);
 const smmry = url => fetch(`https://api.smmry.com?SM_API_KEY=${config.smmryApiKey}&SM_URL=${url}`);
 const toJson = res => res.json();
 const getSummary = R.pipe(smmry, R.then(toJson), R.then(R.prop("sm_api_content")));
@@ -29,11 +30,10 @@ client.on('room.message', async (roomId: string, event: any) => {
   R.when(
     shouldRespond,
     R.pipe(
-      eventBody,
-      getCommandContent,
+      commandContent,
       getSummary,
       R.then(sendNotice(client, roomId)),
-      R.otherwise(R.thunkify(sendNotice)(client, roomId, `Unable to get summary for ${R.pipe(eventBody, getCommandContent)(event)}`))
+      R.otherwise(R.thunkify(sendNotice)(client, roomId, `Unable to get summary for ${commandContent(event)}`))
     ),
     event);
 });
