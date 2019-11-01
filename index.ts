@@ -25,16 +25,16 @@ const getSummary = R.pipe(smmry, R.then(toJson), R.then(R.prop("sm_api_content")
 client.start().then(() => console.log("Client started"));
 
 client.on('room.message', async (roomId: string, event: any) => {
-  if (!shouldRespond(event)) {
-    return;
-  }
-  R.pipe(
-    eventBody,
-    getCommandContent,
-    getSummary,
-    R.then(summary => client.sendNotice(roomId, summary)),
-    R.otherwise(() => client.sendNotice(roomId, `Unable to get summary for ${R.pipe(eventBody, getCommandContent)(event)}`))
-  )(event);
+  R.when(
+    shouldRespond,
+    R.pipe(
+      eventBody,
+      getCommandContent,
+      getSummary,
+      R.then(summary => client.sendNotice(roomId, summary)),
+      R.otherwise(() => client.sendNotice(roomId, `Unable to get summary for ${R.pipe(eventBody, getCommandContent)(event)}`))
+    ),
+    event);
 });
 
 function getConfig(filename: string) {
