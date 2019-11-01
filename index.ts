@@ -13,7 +13,7 @@ interface Config {
 const config = getConfig("config.toml");
 const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsStorageProvider("sync.json"));
 
-const hasContent = event => !!event.content;
+const hasContent = R.compose(R.not, R.isNil, R.prop("content"));
 const eventBody = R.path(["content", "body"]);
 const startsWithBangCommand = command => event => event.content.body.startsWith(`!${command}`);
 const shouldRespond = R.allPass([hasContent, startsWithBangCommand("tldr")]);
