@@ -4,15 +4,19 @@ import * as TOML from "@iarna/toml";
 import { MatrixClient, AutojoinRoomsMixin, SimpleFsStorageProvider, IStorageProvider } from "matrix-bot-sdk";
 import * as R from "ramda";
 
-interface Config {
-  homeserverUrl: string;
-  accessToken: string;
-  smmryApiKey: string;
+const defaultConfig = {
+  homeserverUrl: "https://matrix.org",
+  accessToken: "YOUR MATRIX TOKEN HERE",
+  smmryApiKey: "YOUR SMMRY API KEY HERE"
 };
 
+const envConfig = R.concat("MX_TLDR_BOT_");
+const envConfigFor = R.compose(R.flip(R.prop)(process.env), envConfig);
+const omitNilValues = R.pickBy(R.compose(R.not, R.isNil));
+const mergeAllNonNil = R.compose(R.mergeAll, R.map(omitNilValues));
 const getClient = R.pipe(R.constructN(3, MatrixClient), R.tap(AutojoinRoomsMixin.setupOnClient));
 const readUtf8File = R.curryN(2, readFileSync)(R.__, {encoding: "utf-8"});
-const getConfig = R.pipe(readUtf8File, TOML.parse);
+const readConfig = R.pipe(readUtf8File, TOML.parse);
 const hasContent = R.compose(R.not, R.isNil, R.prop("content"));
 const eventBody = R.path(["content", "body"]);
 const startsWithBangCommand = command => R.pipe(eventBody, R.startsWith(`!${command}`));
@@ -24,7 +28,13 @@ const toJson = R.invoker(0, "json");
 const getSummary = apiKey => R.pipe(smmry(apiKey), R.then(toJson), R.then(R.prop("sm_api_content")));
 const sendNotice = R.curry((client, roomId, message) => client.sendNotice(roomId, message));
 
-const config = getConfig("config.toml");
+const environmentConfig = {
+  homeserverUrl: envConfigFor("HOMESERVER_URL"),
+  accessToken: envConfigFor("ACCESS_TOKEN"),
+  smmryApiKey: envConfigFor("SMMRY_API_KEY")
+};
+
+const config = mergeAllNonNil([defaultConfig, readConfig("config.toml"), environmentConfig]);
 const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsStorageProvider("sync.json"));
 
 client.start().then(() => console.log("Client started"));
