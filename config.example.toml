@@ -1,3 +1,4 @@
 #homeserverUrl = "https://matrix.org"
 accessToken = "YOUR MATRIX TOKEN HERE"  # See https://t2bot.io/docs/access_tokens/
 smmryApiKey = "YOUR SMMRY API KEY HERE"  # See https://smmry.com/api
+#syncStateFile = "mx-tldr-bot.sync.json"

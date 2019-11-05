@@ -40,6 +40,7 @@ mx-tldr-bot can be configured by editing `config.toml` or via environment variab
 - `homeserverUrl` *optional* - the homeserver of the account the bot will use. Defaults to `"https://matrix.org"`.
 - `accessToken` - the access token to authenticate the bot. See [T2Bot's documentation for how to get an access token](https://t2bot.io/docs/access_tokens/).
 - `smmryApiKey` - the API key for SMMRY.
+- `syncStateFile` *optional* - the file that keeps track of the matrix server sync state. Defaults to `"mx-tldr-bot.sync.json"`.
 
 ### Environment variables
 

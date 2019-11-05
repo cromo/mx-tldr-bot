@@ -64,4 +64,4 @@ typings/
 config.toml
 
 # matrix sync state
-sync.json
+*.sync.json

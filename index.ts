@@ -7,7 +7,8 @@ import * as R from "ramda";
 const defaultConfig = {
   homeserverUrl: "https://matrix.org",
   accessToken: "YOUR MATRIX TOKEN HERE",
-  smmryApiKey: "YOUR SMMRY API KEY HERE"
+  smmryApiKey: "YOUR SMMRY API KEY HERE",
+  syncStateFile: "mx-tldr-bot.sync.json"
 };
 
 const envConfig = R.concat("MX_TLDR_BOT_");
@@ -31,7 +32,8 @@ const sendNotice = R.curry((client, roomId, message) => client.sendNotice(roomId
 const environmentConfig = {
   homeserverUrl: envConfigFor("HOMESERVER_URL"),
   accessToken: envConfigFor("ACCESS_TOKEN"),
-  smmryApiKey: envConfigFor("SMMRY_API_KEY")
+  smmryApiKey: envConfigFor("SMMRY_API_KEY"),
+  syncStateFile: envConfigFor("SYNC_STATE_FILE")
 };
 
 const config = mergeAllNonNil([
@@ -39,7 +41,7 @@ const config = mergeAllNonNil([
   readConfig(R.defaultTo("config.toml", envConfigFor("CONFIG_FILE"))),
   environmentConfig
 ]);
-const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsStorageProvider("sync.json"));
+const client = getClient(config.homeserverUrl, config.accessToken, new SimpleFsStorageProvider(config.syncStateFile));
 
 client.start().then(() => console.log("Client started"));
 
