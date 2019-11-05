@@ -29,7 +29,11 @@ npm install
 npm start
 ```
 
-Docker container Coming Soon™
+Using Docker:
+
+```bash
+docker run -it --rm -v "$(pwd)":/src/state -e MX_TLDR_BOT_ACCESS_TOKEN='YOUR ACCESS TOKEN' -e MX_TLDR_BOT_SMMRY_API_KEY='YOUR SMMRY API KEY' -e MX_TLDR_BOT_SYNC_STATE_FILE=state/mx-tldr-bot.sync.json cromo/mx-tldr-bot
+```
 
 ## Configuration
 
